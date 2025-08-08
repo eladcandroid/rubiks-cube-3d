@@ -179,7 +179,7 @@ export const useCubeStore = create<CubeState>((set, get) => ({
   commitActiveRotation: () => {
     const rot = get().activeRotation;
     if (!rot) return;
-    
+
     set((state) => {
       const q = quatFromAxisAngle(rot.axis, (Math.PI / 2) * rot.direction);
       const updated = state.cubies.map((c) => {
@@ -195,28 +195,31 @@ export const useCubeStore = create<CubeState>((set, get) => ({
         const snap = (n: number) => (Math.abs(n) < 0.001 ? 0 : Math.round(n));
         return {
           ...c,
-          position: [snap(newPos[0]), snap(newPos[1]), snap(newPos[2])] as [number, number, number],
+          position: [snap(newPos[0]), snap(newPos[1]), snap(newPos[2])] as [
+            number,
+            number,
+            number
+          ],
           orientation: newOrient,
         };
       });
-      
+
       return { cubies: updated, activeRotation: null };
     });
   },
   addSolvingStep: (step) =>
     set((s) => ({ solvingSteps: [...s.solvingSteps, step] })),
-  clearSolvingSteps: () =>
-    set({ solvingSteps: [], currentSolvingStep: -1 }),
+  clearSolvingSteps: () => set({ solvingSteps: [], currentSolvingStep: -1 }),
   setIsSolving: (solving) => set({ isSolving: solving }),
   setCurrentSolvingStep: (step) => set({ currentSolvingStep: step }),
   reset: () =>
-    set({ 
-      cubies: makeSolvedCubies(), 
-      activeRotation: null, 
+    set({
+      cubies: makeSolvedCubies(),
+      activeRotation: null,
       moveQueue: [],
       solvingSteps: [],
       isSolving: false,
-      currentSolvingStep: -1
+      currentSolvingStep: -1,
     }),
 }));
 

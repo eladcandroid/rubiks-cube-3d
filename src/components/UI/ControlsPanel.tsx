@@ -57,46 +57,54 @@ export function ControlsPanel() {
 
   const onAutoSolve = useCallback(async () => {
     if (isSolving) return;
-    
+
     clearSolvingSteps();
     setIsSolving(true);
     setCurrentSolvingStep(-1);
-    
+
     const steps = generateDemoSolvingSteps();
-    
+
     // Add initial step
     addSolvingStep({
-      stepKey: 'solve.starting',
-      descKey: 'solve.starting',
-      moves: ''
+      stepKey: "solve.starting",
+      descKey: "solve.starting",
+      moves: "",
     });
     setCurrentSolvingStep(0);
-    
+
     // Execute each step with delay for educational effect
     for (let i = 0; i < steps.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Wait between steps
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Wait between steps
+
       addSolvingStep(steps[i]);
       setCurrentSolvingStep(i + 1);
-      
+
       // Execute the moves
       enqueue(steps[i].moveCommands);
-      
+
       // Wait for moves to complete before next step
-      await new Promise(resolve => setTimeout(resolve, steps[i].moveCommands.length * 600));
+      await new Promise((resolve) =>
+        setTimeout(resolve, steps[i].moveCommands.length * 600)
+      );
     }
-    
+
     // Complete solving
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     addSolvingStep({
-      stepKey: 'solve.completed',
-      descKey: 'solve.completed', 
-      moves: ''
+      stepKey: "solve.completed",
+      descKey: "solve.completed",
+      moves: "",
     });
     setCurrentSolvingStep(steps.length + 1);
     setIsSolving(false);
-    
-  }, [isSolving, clearSolvingSteps, setIsSolving, setCurrentSolvingStep, addSolvingStep, enqueue]);
+  }, [
+    isSolving,
+    clearSolvingSteps,
+    setIsSolving,
+    setCurrentSolvingStep,
+    addSolvingStep,
+    enqueue,
+  ]);
 
   const disabled = useCubeStore((s) => !!s.activeRotation) || isSolving;
 
@@ -118,7 +126,7 @@ export function ControlsPanel() {
               minHeight: "36px",
               fontSize: "16px",
               fontWeight: "bold",
-              fontFamily: "monospace"
+              fontFamily: "monospace",
             }}
           >
             {t(button.key)}
@@ -127,41 +135,39 @@ export function ControlsPanel() {
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button onClick={() => runSeq(scramble)} disabled={disabled}>
-          {t('controls.runScramble')}
+          {t("controls.runScramble")}
         </button>
         <button onClick={onScramble} disabled={disabled}>
-          {t('controls.newScramble')}
+          {t("controls.newScramble")}
         </button>
-        <button 
-          onClick={onAutoSolve} 
+        <button
+          onClick={onAutoSolve}
           disabled={disabled}
           style={{
-            backgroundColor: isSolving ? '#ff9800' : '#4caf50',
-            color: 'white',
-            border: 'none',
-            fontWeight: 'bold'
+            backgroundColor: isSolving ? "#ff9800" : "#4caf50",
+            color: "white",
+            border: "none",
+            fontWeight: "bold",
           }}
         >
-          {t('controls.autoSolve')}
+          {t("controls.autoSolve")}
         </button>
         <button onClick={() => reset()} disabled={disabled}>
-          {t('controls.reset')}
+          {t("controls.reset")}
         </button>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
         <input
           value={seq}
           onChange={(e) => setSeq(e.target.value)}
-          placeholder={t('controls.inputPlaceholder')}
+          placeholder={t("controls.inputPlaceholder")}
           style={{ flex: 1 }}
         />
         <button onClick={() => runSeq(seq)} disabled={!seq.trim() || disabled}>
-          {t('controls.run')}
+          {t("controls.run")}
         </button>
       </div>
-      <small>
-        {t('controls.keyboardTip')}
-      </small>
+      <small>{t("controls.keyboardTip")}</small>
       <SolvingSteps />
     </div>
   );

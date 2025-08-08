@@ -91,11 +91,11 @@ export function Cubie({ data }: { data: CubieData }) {
 
   return (
     <a.group position={groupPos} quaternion={quat}>
-      <RoundedBox 
-        args={[CUBIE_SIZE, CUBIE_SIZE, CUBIE_SIZE]} 
+      <RoundedBox
+        args={[CUBIE_SIZE, CUBIE_SIZE, CUBIE_SIZE]}
         radius={BORDER_RADIUS}
         smoothness={4}
-        castShadow 
+        castShadow
         receiveShadow
       >
         <primitive object={blackMaterial} attach="material" />
@@ -103,7 +103,7 @@ export function Cubie({ data }: { data: CubieData }) {
       {faces.map((f, i) => {
         // Only render sticker if it has a color
         if (!f.color) return null;
-        
+
         return (
           <group
             key={i}

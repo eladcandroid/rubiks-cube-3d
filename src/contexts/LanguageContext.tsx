@@ -17,7 +17,7 @@ const translations = {
     // Controls
     'controls.newScramble': 'New Scramble',
     'controls.runScramble': 'Run Scramble',
-    'controls.autoSolve': '🧠 Auto Solve',
+    'controls.autoSolve': '🧠 Learn Techniques',
     'controls.reset': 'Reset',
     'controls.run': 'Run',
     'controls.inputPlaceholder': 'Enter sequence e.g., R U R\' U\'',
@@ -50,7 +50,7 @@ const translations = {
     'moves.B2': '○2',
     
     // Solving steps
-    'solve.starting': '🎯 Starting to solve the cube...',
+    'solve.starting': '🎯 Learning solving techniques...',
     'solve.step1': '🟦 Step 1: Making White Cross',
     'solve.step1.desc': 'Moving white edge pieces to form a cross on top',
     'solve.step2': '🔲 Step 2: Completing White Corners',
@@ -65,7 +65,7 @@ const translations = {
     'solve.step6.desc': 'Moving yellow corners to correct positions',
     'solve.step7': '🎉 Step 7: Final Edge Positioning',
     'solve.step7.desc': 'Placing the last edge pieces correctly',
-    'solve.completed': '🎉 Congratulations! Cube solved!',
+    'solve.completed': '🎉 Learning session completed!',
     'solve.moves': 'Moves:',
   },
   he: {
@@ -75,7 +75,7 @@ const translations = {
     // Controls
     'controls.newScramble': 'ערבול חדש',
     'controls.runScramble': 'הפעל ערבול',
-    'controls.autoSolve': '🧠 פתרון אוטומטי',
+    'controls.autoSolve': '🧠 לימוד טכניקות',
     'controls.reset': 'איפוס',
     'controls.run': 'הפעל',
     'controls.inputPlaceholder': 'הכנס רצף למשל, ימ ע ימ\' ע\'',
@@ -108,7 +108,7 @@ const translations = {
     'moves.B2': '○2',
     
     // Solving steps
-    'solve.starting': '🎯 מתחיל לפתור את הקוביה...',
+    'solve.starting': '🎯 לומד טכניקות פתרון...',
     'solve.step1': '🟦 שלב 1: יצירת צלב לבן',
     'solve.step1.desc': 'הזזת חלקי קצה לבנים ליצירת צלב בחלק העליון',
     'solve.step2': '🔲 שלב 2: השלמת פינות לבנות',
@@ -123,7 +123,7 @@ const translations = {
     'solve.step6.desc': 'הזזת פינות צהובות למקומות הנכונים',
     'solve.step7': '🎉 שלב 7: מיקום קצוות אחרונים',
     'solve.step7.desc': 'הצבת חלקי הקצה האחרונים במקום הנכון',
-    'solve.completed': '🎉 ברכות! הקוביה נפתרה!',
+    'solve.completed': '🎉 מפגש לימוד הושלם!',
     'solve.moves': 'מהלכים:',
   },
 };

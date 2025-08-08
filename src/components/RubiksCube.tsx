@@ -9,7 +9,7 @@ function MoveOrchestrator() {
   const active = useCubeStore((s) => s.activeRotation);
   const queue = useCubeStore((s) => s.moveQueue);
   const startNext = useCubeStore((s) => s.startNextMove);
-  
+
   useEffect(() => {
     if (!active && queue.length > 0) {
       // Small delay between moves for clarity
@@ -17,32 +17,28 @@ function MoveOrchestrator() {
       return () => clearTimeout(timer);
     }
   }, [active, queue.length, startNext]);
-  
+
   return null;
 }
 
 export function RubiksCubeScene() {
   return (
-    <Canvas 
-      camera={{ position: [6, 6, 6], fov: 45 }} 
+    <Canvas
+      camera={{ position: [6, 6, 6], fov: 45 }}
       shadows="soft"
-      gl={{ 
+      gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.0
+        toneMappingExposure: 1.0,
       }}
     >
       <color attach="background" args={["#0f0f1a"]} />
       <fog attach="fog" args={["#0f0f1a", 12, 30]} />
-      
+
       {/* Lighting setup */}
       <ambientLight intensity={0.5} />
-      <hemisphereLight 
-        intensity={0.6} 
-        color="#ffffff"
-        groundColor="#444455" 
-      />
-      
+      <hemisphereLight intensity={0.6} color="#ffffff" groundColor="#444455" />
+
       <directionalLight
         position={[5, 10, 5]}
         intensity={1.0}
@@ -55,26 +51,18 @@ export function RubiksCubeScene() {
         shadow-camera-top={6}
         shadow-camera-bottom={-6}
       />
-      
-      <pointLight 
-        position={[-5, 5, -5]} 
-        intensity={0.4}
-        color="#5588ff"
-      />
-      
-      <pointLight 
-        position={[5, 2, -5]} 
-        intensity={0.2}
-        color="#ff8855"
-      />
-      
+
+      <pointLight position={[-5, 5, -5]} intensity={0.4} color="#5588ff" />
+
+      <pointLight position={[5, 2, -5]} intensity={0.2} color="#ff8855" />
+
       <Environment preset="sunset" background={false} />
-      
+
       <Center>
         <PerfectCube />
         {/* Add a subtle platform shadow */}
-        <mesh 
-          rotation={[-Math.PI / 2, 0, 0]} 
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -2, 0]}
           receiveShadow
         >
@@ -82,9 +70,9 @@ export function RubiksCubeScene() {
           <shadowMaterial opacity={0.3} />
         </mesh>
       </Center>
-      
-      <OrbitControls 
-        enablePan={false} 
+
+      <OrbitControls
+        enablePan={false}
         maxPolarAngle={Math.PI * 0.85}
         minDistance={5}
         maxDistance={15}
@@ -92,7 +80,7 @@ export function RubiksCubeScene() {
         enableDamping
         dampingFactor={0.05}
       />
-      
+
       <MoveOrchestrator />
     </Canvas>
   );
