@@ -20,7 +20,7 @@ const translations = {
     'controls.reset': 'Reset',
     'controls.run': 'Run',
     'controls.inputPlaceholder': 'Enter sequence e.g., R U R\' U\'',
-    'controls.keyboardTip': 'Tip: Keyboard shortcuts: U D L R F B, with Shift for prime, 2 for double. Buttons show: ↑ ↓ ← → 1 6',
+    'controls.keyboardTip': 'Tip: Keyboard shortcuts: U D L R F B, with Shift for prime, 2 for double. Buttons show: ↑ ↓ ← → ● ○',
     
     // Footer
     'footer.builtWith': 'Built with React, Three.js, Zustand and @react-three/fiber. Smooth rotations, full animations, keyboard and buttons.',
@@ -41,12 +41,12 @@ const translations = {
     'moves.R': '→',
     'moves.R_prime': '→\'',
     'moves.R2': '→2',
-    'moves.F': '1',
-    'moves.F_prime': '1\'',
-    'moves.F2': '12',
-    'moves.B': '6',
-    'moves.B_prime': '6\'',
-    'moves.B2': '62',
+    'moves.F': '●',
+    'moves.F_prime': '●\'',
+    'moves.F2': '●2',
+    'moves.B': '○',
+    'moves.B_prime': '○\'',
+    'moves.B2': '○2',
   },
   he: {
     // App title
@@ -58,7 +58,7 @@ const translations = {
     'controls.reset': 'איפוס',
     'controls.run': 'הפעל',
     'controls.inputPlaceholder': 'הכנס רצף למשל, ימ ע ימ\' ע\'',
-    'controls.keyboardTip': 'עצה: קיצורי מקלדת: U D L R F B, עם Shift לסיבוב הפוך, 2 לסיבוב כפול. כפתורים מציגים: ↑ ↓ ← → 1 6',
+    'controls.keyboardTip': 'עצה: קיצורי מקלדת: U D L R F B, עם Shift לסיבוב הפוך, 2 לסיבוב כפול. כפתורים מציגים: ↑ ↓ ← → ● ○',
     
     // Footer
     'footer.builtWith': 'בנוי עם React, Three.js, Zustand ו-@react-three/fiber. סיבובים חלקים, אנימציות מלאות, מקלדת וכפתורים.',
@@ -79,12 +79,12 @@ const translations = {
     'moves.R': '→', // ימין (Right)
     'moves.R_prime': '→\'',
     'moves.R2': '→2',
-    'moves.F': '1', // קדמי (Front)
-    'moves.F_prime': '1\'',
-    'moves.F2': '12',
-    'moves.B': '6', // אחורי (Back)
-    'moves.B_prime': '6\'',
-    'moves.B2': '62',
+    'moves.F': '●', // קדמי (Front)
+    'moves.F_prime': '●\'',
+    'moves.F2': '●2',
+    'moves.B': '○', // אחורי (Back)
+    'moves.B_prime': '○\'',
+    'moves.B2': '○2',
   },
 };
 
