@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { ReactNode } from 'react';
 
 type Language = 'en' | 'he';
 
@@ -19,7 +20,7 @@ const translations = {
     'controls.reset': 'Reset',
     'controls.run': 'Run',
     'controls.inputPlaceholder': 'Enter sequence e.g., R U R\' U\'',
-    'controls.keyboardTip': 'Tip: Keyboard shortcuts: U D L R F B, with Shift for prime, 2 for double.',
+    'controls.keyboardTip': 'Tip: Keyboard shortcuts: U D L R F B, with Shift for prime, 2 for double. Buttons show: ↑ ↓ ← → 1 6',
     
     // Footer
     'footer.builtWith': 'Built with React, Three.js, Zustand and @react-three/fiber. Smooth rotations, full animations, keyboard and buttons.',
@@ -27,25 +28,25 @@ const translations = {
     // Language switch
     'language.switch': 'עברית',
     
-    // Move notation (English uses standard notation)
-    'moves.U': 'U',
-    'moves.U_prime': 'U\'',
-    'moves.U2': 'U2',
-    'moves.D': 'D',
-    'moves.D_prime': 'D\'',
-    'moves.D2': 'D2',
-    'moves.L': 'L',
-    'moves.L_prime': 'L\'',
-    'moves.L2': 'L2',
-    'moves.R': 'R',
-    'moves.R_prime': 'R\'',
-    'moves.R2': 'R2',
-    'moves.F': 'F',
-    'moves.F_prime': 'F\'',
-    'moves.F2': 'F2',
-    'moves.B': 'B',
-    'moves.B_prime': 'B\'',
-    'moves.B2': 'B2',
+    // Move notation (arrows and numbers)
+    'moves.U': '↑',
+    'moves.U_prime': '↑\'',
+    'moves.U2': '↑2',
+    'moves.D': '↓',
+    'moves.D_prime': '↓\'',
+    'moves.D2': '↓2',
+    'moves.L': '←',
+    'moves.L_prime': '←\'',
+    'moves.L2': '←2',
+    'moves.R': '→',
+    'moves.R_prime': '→\'',
+    'moves.R2': '→2',
+    'moves.F': '1',
+    'moves.F_prime': '1\'',
+    'moves.F2': '12',
+    'moves.B': '6',
+    'moves.B_prime': '6\'',
+    'moves.B2': '62',
   },
   he: {
     // App title
@@ -57,7 +58,7 @@ const translations = {
     'controls.reset': 'איפוס',
     'controls.run': 'הפעל',
     'controls.inputPlaceholder': 'הכנס רצף למשל, ימ ע ימ\' ע\'',
-    'controls.keyboardTip': 'עצה: קיצורי מקלדת: ע ת ש ימ ק א, עם Shift לסיבוב הפוך, 2 לסיבוב כפול.',
+    'controls.keyboardTip': 'עצה: קיצורי מקלדת: U D L R F B, עם Shift לסיבוב הפוך, 2 לסיבוב כפול. כפתורים מציגים: ↑ ↓ ← → 1 6',
     
     // Footer
     'footer.builtWith': 'בנוי עם React, Three.js, Zustand ו-@react-three/fiber. סיבובים חלקים, אנימציות מלאות, מקלדת וכפתורים.',
@@ -65,25 +66,25 @@ const translations = {
     // Language switch
     'language.switch': 'English',
     
-    // Move notation (Hebrew letters)
-    'moves.U': 'ע', // עליון (Upper)
-    'moves.U_prime': 'ע\'',
-    'moves.U2': 'ע2',
-    'moves.D': 'ת', // תחתון (Down)
-    'moves.D_prime': 'ת\'',
-    'moves.D2': 'ת2',
-    'moves.L': 'ש', // שמאל (Left)
-    'moves.L_prime': 'ש\'',
-    'moves.L2': 'ש2',
-    'moves.R': 'ימ', // ימין (Right)
-    'moves.R_prime': 'ימ\'',
-    'moves.R2': 'ימ2',
-    'moves.F': 'ק', // קדמי (Front)
-    'moves.F_prime': 'ק\'',
-    'moves.F2': 'ק2',
-    'moves.B': 'א', // אחורי (Back)
-    'moves.B_prime': 'א\'',
-    'moves.B2': 'א2',
+    // Move notation (arrows and numbers - same as English)
+    'moves.U': '↑', // עליון (Upper)
+    'moves.U_prime': '↑\'',
+    'moves.U2': '↑2',
+    'moves.D': '↓', // תחתון (Down)
+    'moves.D_prime': '↓\'',
+    'moves.D2': '↓2',
+    'moves.L': '←', // שמאל (Left)
+    'moves.L_prime': '←\'',
+    'moves.L2': '←2',
+    'moves.R': '→', // ימין (Right)
+    'moves.R_prime': '→\'',
+    'moves.R2': '→2',
+    'moves.F': '1', // קדמי (Front)
+    'moves.F_prime': '1\'',
+    'moves.F2': '12',
+    'moves.B': '6', // אחורי (Back)
+    'moves.B_prime': '6\'',
+    'moves.B2': '62',
   },
 };
 

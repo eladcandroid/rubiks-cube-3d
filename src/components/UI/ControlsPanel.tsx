@@ -65,9 +65,10 @@ export function ControlsPanel() {
             onClick={() => runSeq(button.seq)}
             disabled={disabled}
             style={{
-              minHeight: "32px",
-              fontSize: "14px",
-              fontWeight: "bold"
+              minHeight: "36px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              fontFamily: "monospace"
             }}
           >
             {t(button.key)}
