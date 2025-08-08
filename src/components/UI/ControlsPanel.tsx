@@ -5,7 +5,7 @@ import {
   randomScramble,
 } from "../../state/cubeStore";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { generateDemoSolvingSteps } from "../../utils/cubeSolver";
+import { generateActualSolvingSteps, setLastScramble } from "../../utils/realCubeSolver";
 import { SolvingSteps } from "./SolvingSteps";
 
 const MOVE_BUTTONS = [
@@ -51,7 +51,9 @@ export function ControlsPanel() {
 
   const onScramble = useCallback(() => {
     const s = randomScramble();
+    console.log('🎲 SCRAMBLE: Generated new scramble:', s);
     setScramble(s);
+    setLastScramble(s); // Store for solving
     runSeq(s);
   }, [runSeq]);
 
@@ -62,7 +64,7 @@ export function ControlsPanel() {
     setIsSolving(true);
     setCurrentSolvingStep(-1);
 
-    const steps = generateDemoSolvingSteps();
+    const steps = generateActualSolvingSteps();
 
     // Add initial step
     addSolvingStep({
@@ -134,7 +136,11 @@ export function ControlsPanel() {
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <button onClick={() => runSeq(scramble)} disabled={disabled}>
+        <button onClick={() => {
+          console.log('🎲 SCRAMBLE: Running existing scramble:', scramble);
+          setLastScramble(scramble); // Store for solving
+          runSeq(scramble);
+        }} disabled={disabled}>
           {t("controls.runScramble")}
         </button>
         <button onClick={onScramble} disabled={disabled}>

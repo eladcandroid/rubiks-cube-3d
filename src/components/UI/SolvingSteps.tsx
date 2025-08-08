@@ -53,8 +53,8 @@ export function SolvingSteps() {
       }}>
         {isSolving ? '🧠 ' : '✅ '}
         {isSolving ? 
-          (isRTL ? 'לומד טכניקות פתרון...' : 'Learning solving techniques...') : 
-          (isRTL ? 'מפגש לימוד הושלם!' : 'Learning session completed!')
+          (isRTL ? 'פותר את הקוביה...' : 'Solving the cube...') : 
+          (isRTL ? 'הקוביה נפתרה!' : 'Cube solved!')
         }
       </h3>
       
