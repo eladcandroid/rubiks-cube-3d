@@ -9,23 +9,24 @@ export function DebugInfo() {
       position: "fixed",
       top: 10,
       left: 10,
-      background: "rgba(0,0,0,0.8)",
+      background: "rgba(0,0,0,0.9)",
       color: "white",
       padding: "10px",
       borderRadius: "5px",
       fontFamily: "monospace",
-      fontSize: "12px",
-      zIndex: 1000
+      fontSize: "11px",
+      zIndex: 1000,
+      lineHeight: "1.3"
     }}>
-      <div>Animation Status:</div>
-      {active ? (
-        <div style={{ color: "#00ff00" }}>
-          ANIMATING: {active.axis.toUpperCase()} layer {active.layer} dir: {active.direction}
-        </div>
-      ) : (
-        <div style={{ color: "#ffff00" }}>IDLE</div>
-      )}
+      <div><strong>Debug Info:</strong></div>
+      <div>Store Active: {active ? 
+        <span style={{ color: "#00ff00" }}>
+          {active.axis.toUpperCase()}-{active.layer}-{active.direction > 0 ? "CW" : "CCW"}
+        </span> : 
+        <span style={{ color: "#888" }}>null</span>
+      }</div>
       <div>Queue: {queue.length} moves</div>
+      <div>Time: {Date.now() % 10000}</div>
     </div>
   );
 }

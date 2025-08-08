@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, Center } from "@react-three/drei";
 import * as THREE from "three";
 import { useCubeStore } from "../state/cubeStore";
-import { AnimatedCube } from "./AnimatedCube";
+import { SmoothCube } from "./SmoothCube";
 
 function MoveOrchestrator() {
   const active = useCubeStore((s) => s.activeRotation);
@@ -71,7 +71,7 @@ export function RubiksCubeScene() {
       <Environment preset="sunset" background={false} />
       
       <Center>
-        <AnimatedCube />
+        <SmoothCube />
         {/* Add a subtle platform shadow */}
         <mesh 
           rotation={[-Math.PI / 2, 0, 0]} 

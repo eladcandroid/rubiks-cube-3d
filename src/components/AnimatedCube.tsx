@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useCubeStore } from "../state/cubeStore";
@@ -12,8 +12,7 @@ export function AnimatedCube() {
   const active = useCubeStore((s) => s.activeRotation);
   const commit = useCubeStore((s) => s.commitActiveRotation);
   
-  const [animationData, setAnimationData] = useState<{
-    isAnimating: boolean;
+  const [animationState, setAnimationState] = useState<{
     axis: "x" | "y" | "z";
     direction: 1 | -1;
     layer: number;
@@ -23,7 +22,7 @@ export function AnimatedCube() {
 
   // Start animation when active rotation changes
   useEffect(() => {
-    if (active && !animationData?.isAnimating) {
+    if (active && !animationState) {
       const axisIndex = active.axis === "x" ? 0 : active.axis === "y" ? 1 : 2;
       const rotatingIds = new Set(
         cubies
@@ -31,38 +30,47 @@ export function AnimatedCube() {
           .map((c) => c.id)
       );
       
-      setAnimationData({
-        isAnimating: true,
+      setAnimationState({
         axis: active.axis,
         direction: active.direction,
         layer: active.layer,
         startTime: Date.now(),
-        rotatingCubieIds: rotatingIds
+        rotatingCubieIds: rotatingIds,
       });
+    } else if (!active && animationState) {
+      // Active rotation cleared, clean up animation
+      setAnimationState(null);
     }
-  }, [active, animationData?.isAnimating, cubies]);
+  }, [active, animationState]);
+
+  // Animation progress tracking
+  const animationProgress = useMemo(() => {
+    if (!animationState) return 0;
+    const elapsed = Date.now() - animationState.startTime;
+    return Math.min(elapsed / 500, 1); // 500ms duration
+  }, [animationState]);
 
   // Animate on each frame
   useFrame(() => {
-    if (!animationData?.isAnimating || !rotatingGroupRef.current) {
+    if (!animationState || !rotatingGroupRef.current) {
       return;
     }
 
-    const elapsed = Date.now() - animationData.startTime;
-    const duration = 500; // 500ms animation
+    const elapsed = Date.now() - animationState.startTime;
+    const duration = 500;
     let progress = Math.min(elapsed / duration, 1);
     
-    // Apply easing function (ease-in-out cubic)
+    // Apply easing
     const easedProgress = progress < 0.5
       ? 4 * progress * progress * progress
       : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-    const angle = easedProgress * animationData.direction * (Math.PI / 2);
+    const angle = easedProgress * animationState.direction * (Math.PI / 2);
     
-    // Apply rotation based on axis
-    if (animationData.axis === "x") {
+    // Apply rotation
+    if (animationState.axis === "x") {
       rotatingGroupRef.current.rotation.x = angle;
-    } else if (animationData.axis === "y") {
+    } else if (animationState.axis === "y") {
       rotatingGroupRef.current.rotation.y = angle;
     } else {
       rotatingGroupRef.current.rotation.z = angle;
@@ -70,59 +78,58 @@ export function AnimatedCube() {
 
     // Check if animation is complete
     if (progress >= 1) {
-      // Reset rotation
-      rotatingGroupRef.current.rotation.set(0, 0, 0);
+      // Set final rotation exactly
+      const finalAngle = animationState.direction * (Math.PI / 2);
+      if (animationState.axis === "x") {
+        rotatingGroupRef.current.rotation.x = finalAngle;
+      } else if (animationState.axis === "y") {
+        rotatingGroupRef.current.rotation.y = finalAngle;
+      } else {
+        rotatingGroupRef.current.rotation.z = finalAngle;
+      }
       
-      // Commit changes and stop animation
-      commit();
-      setAnimationData(null);
+      // Force one more render with the final rotation before committing
+      setTimeout(() => {
+        commit();
+      }, 0);
     }
   });
 
-  // Render all cubies but separate rotating ones
-  const renderCubies = () => {
-    if (!animationData?.isAnimating) {
-      // No animation - render all cubies normally
-      return cubies.map((cubie) => (
-        <Cubie key={cubie.id} data={cubie} />
-      ));
+  // Split cubies into static and rotating
+  const { staticCubies, rotatingCubies } = useMemo(() => {
+    if (!animationState) {
+      return { staticCubies: cubies, rotatingCubies: [] };
     }
-
-    // During animation - split cubies into two groups
-    const staticCubies: typeof cubies = [];
-    const rotatingCubies: typeof cubies = [];
-
-    cubies.forEach((cubie) => {
-      if (animationData.rotatingCubieIds.has(cubie.id)) {
-        rotatingCubies.push(cubie);
+    
+    const static_: typeof cubies = [];
+    const rotating: typeof cubies = [];
+    
+    cubies.forEach(cubie => {
+      if (animationState.rotatingCubieIds.has(cubie.id)) {
+        rotating.push(cubie);
       } else {
-        staticCubies.push(cubie);
+        static_.push(cubie);
       }
     });
-
-    return (
-      <>
-        {/* Static cubies */}
-        {staticCubies.map((cubie) => (
-          <Cubie key={cubie.id} data={cubie} />
-        ))}
-        
-        {/* Rotating cubies in separate group */}
-        <group 
-          ref={rotatingGroupRef} 
-          key={`rotating-${animationData.axis}-${animationData.layer}`}
-        >
-          {rotatingCubies.map((cubie) => (
-            <Cubie key={`rotating-${cubie.id}`} data={cubie} />
-          ))}
-        </group>
-      </>
-    );
-  };
+    
+    return { staticCubies: static_, rotatingCubies: rotating };
+  }, [cubies, animationState]);
 
   return (
     <group ref={groupRef}>
-      {renderCubies()}
+      {/* Static cubies */}
+      {staticCubies.map((cubie) => (
+        <Cubie key={cubie.id} data={cubie} />
+      ))}
+      
+      {/* Rotating cubies - only render when animating */}
+      {animationState && (
+        <group ref={rotatingGroupRef}>
+          {rotatingCubies.map((cubie) => (
+            <Cubie key={cubie.id} data={cubie} />
+          ))}
+        </group>
+      )}
     </group>
   );
 }
