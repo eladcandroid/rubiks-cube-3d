@@ -5,6 +5,8 @@ import {
   randomScramble,
 } from "../../state/cubeStore";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { generateDemoSolvingSteps } from "../../utils/cubeSolver";
+import { SolvingSteps } from "./SolvingSteps";
 
 const MOVE_BUTTONS = [
   { key: "moves.U", seq: "U" },
@@ -31,6 +33,11 @@ export function ControlsPanel() {
   const { t } = useLanguage();
   const enqueue = useCubeStore((s) => s.enqueueMoves);
   const reset = useCubeStore((s) => s.reset);
+  const addSolvingStep = useCubeStore((s) => s.addSolvingStep);
+  const clearSolvingSteps = useCubeStore((s) => s.clearSolvingSteps);
+  const setIsSolving = useCubeStore((s) => s.setIsSolving);
+  const setCurrentSolvingStep = useCubeStore((s) => s.setCurrentSolvingStep);
+  const isSolving = useCubeStore((s) => s.isSolving);
   const [seq, setSeq] = useState("");
   const [scramble, setScramble] = useState(() => randomScramble());
 
@@ -48,7 +55,50 @@ export function ControlsPanel() {
     runSeq(s);
   }, [runSeq]);
 
-  const disabled = useCubeStore((s) => !!s.activeRotation);
+  const onAutoSolve = useCallback(async () => {
+    if (isSolving) return;
+    
+    clearSolvingSteps();
+    setIsSolving(true);
+    setCurrentSolvingStep(-1);
+    
+    const steps = generateDemoSolvingSteps();
+    
+    // Add initial step
+    addSolvingStep({
+      stepKey: 'solve.starting',
+      descKey: 'solve.starting',
+      moves: ''
+    });
+    setCurrentSolvingStep(0);
+    
+    // Execute each step with delay for educational effect
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Wait between steps
+      
+      addSolvingStep(steps[i]);
+      setCurrentSolvingStep(i + 1);
+      
+      // Execute the moves
+      enqueue(steps[i].moveCommands);
+      
+      // Wait for moves to complete before next step
+      await new Promise(resolve => setTimeout(resolve, steps[i].moveCommands.length * 600));
+    }
+    
+    // Complete solving
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    addSolvingStep({
+      stepKey: 'solve.completed',
+      descKey: 'solve.completed', 
+      moves: ''
+    });
+    setCurrentSolvingStep(steps.length + 1);
+    setIsSolving(false);
+    
+  }, [isSolving, clearSolvingSteps, setIsSolving, setCurrentSolvingStep, addSolvingStep, enqueue]);
+
+  const disabled = useCubeStore((s) => !!s.activeRotation) || isSolving;
 
   return (
     <div style={{ display: "grid", gap: 8 }}>
@@ -75,12 +125,24 @@ export function ControlsPanel() {
           </button>
         ))}
       </div>
-      <div style={{ display: "flex", gap: 8 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button onClick={() => runSeq(scramble)} disabled={disabled}>
           {t('controls.runScramble')}
         </button>
         <button onClick={onScramble} disabled={disabled}>
           {t('controls.newScramble')}
+        </button>
+        <button 
+          onClick={onAutoSolve} 
+          disabled={disabled}
+          style={{
+            backgroundColor: isSolving ? '#ff9800' : '#4caf50',
+            color: 'white',
+            border: 'none',
+            fontWeight: 'bold'
+          }}
+        >
+          {t('controls.autoSolve')}
         </button>
         <button onClick={() => reset()} disabled={disabled}>
           {t('controls.reset')}
@@ -100,6 +162,7 @@ export function ControlsPanel() {
       <small>
         {t('controls.keyboardTip')}
       </small>
+      <SolvingSteps />
     </div>
   );
 }

@@ -29,14 +29,27 @@ export interface MoveCommand {
   direction: 1 | -1;
 }
 
+export interface SolvingStep {
+  stepKey: string;
+  descKey: string;
+  moves: string;
+}
+
 export interface CubeState {
   cubies: CubieData[];
   activeRotation: ActiveRotation | null;
   moveQueue: MoveCommand[];
+  solvingSteps: SolvingStep[];
+  isSolving: boolean;
+  currentSolvingStep: number;
   setActiveRotation: (rot: ActiveRotation | null) => void;
   enqueueMoves: (moves: MoveCommand[]) => void;
   startNextMove: () => void;
   commitActiveRotation: () => void;
+  addSolvingStep: (step: SolvingStep) => void;
+  clearSolvingSteps: () => void;
+  setIsSolving: (solving: boolean) => void;
+  setCurrentSolvingStep: (step: number) => void;
   reset: () => void;
 }
 
@@ -142,6 +155,9 @@ export const useCubeStore = create<CubeState>((set, get) => ({
   cubies: makeSolvedCubies(),
   activeRotation: null,
   moveQueue: [],
+  solvingSteps: [],
+  isSolving: false,
+  currentSolvingStep: -1,
   setActiveRotation: (rot) => set({ activeRotation: rot }),
   enqueueMoves: (moves) =>
     set((s) => ({ moveQueue: [...s.moveQueue, ...moves] })),
@@ -187,8 +203,21 @@ export const useCubeStore = create<CubeState>((set, get) => ({
       return { cubies: updated, activeRotation: null };
     });
   },
+  addSolvingStep: (step) =>
+    set((s) => ({ solvingSteps: [...s.solvingSteps, step] })),
+  clearSolvingSteps: () =>
+    set({ solvingSteps: [], currentSolvingStep: -1 }),
+  setIsSolving: (solving) => set({ isSolving: solving }),
+  setCurrentSolvingStep: (step) => set({ currentSolvingStep: step }),
   reset: () =>
-    set({ cubies: makeSolvedCubies(), activeRotation: null, moveQueue: [] }),
+    set({ 
+      cubies: makeSolvedCubies(), 
+      activeRotation: null, 
+      moveQueue: [],
+      solvingSteps: [],
+      isSolving: false,
+      currentSolvingStep: -1
+    }),
 }));
 
 // Helpers to express human moves (U, D, L, R, F, B)
