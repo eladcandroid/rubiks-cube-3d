@@ -149,6 +149,9 @@ export const useCubeStore = create<CubeState>((set, get) => ({
     const { activeRotation, moveQueue } = get();
     if (activeRotation || moveQueue.length === 0) return;
     const next = moveQueue[0];
+    
+    console.log(`[${performance.now().toFixed(1)}ms] STORE: 🟡 STARTING MOVE ${next.axis}-${next.layer}-${next.direction}`);
+    
     set({
       activeRotation: {
         axis: next.axis,
@@ -162,7 +165,13 @@ export const useCubeStore = create<CubeState>((set, get) => ({
   },
   commitActiveRotation: () => {
     const rot = get().activeRotation;
-    if (!rot) return;
+    if (!rot) {
+      console.log(`[${performance.now().toFixed(1)}ms] STORE: commitActiveRotation called but no active rotation`);
+      return;
+    }
+    
+    console.log(`[${performance.now().toFixed(1)}ms] STORE: 🔵 STARTING COMMIT for ${rot.axis}-${rot.layer}-${rot.direction}`);
+    
     set((state) => {
       const q = quatFromAxisAngle(rot.axis, (Math.PI / 2) * rot.direction);
       const updated = state.cubies.map((c) => {
@@ -182,6 +191,8 @@ export const useCubeStore = create<CubeState>((set, get) => ({
           orientation: newOrient,
         };
       });
+      
+      console.log(`[${performance.now().toFixed(1)}ms] STORE: 🟢 COMMIT COMPLETE - activeRotation set to null`);
       return { cubies: updated, activeRotation: null };
     });
   },
