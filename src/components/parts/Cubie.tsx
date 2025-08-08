@@ -4,10 +4,10 @@ import { a } from "@react-spring/three";
 import { RoundedBox } from "@react-three/drei";
 import type { CubieData } from "../../state/cubeStore";
 
-const FACE_SIZE = 0.85;
+const FACE_SIZE = 0.84;
 const GAP = 0.06;
-const STICKER_DEPTH = 0.005; // Increased to prevent z-fighting
-const CUBIE_SIZE = 0.97;
+const STICKER_DEPTH = 0.008; // Further increased to prevent z-fighting
+const CUBIE_SIZE = 0.96;
 const BORDER_RADIUS = 0.08;
 
 const blackMaterial = new THREE.MeshPhysicalMaterial({
@@ -16,6 +16,9 @@ const blackMaterial = new THREE.MeshPhysicalMaterial({
   roughness: 0.9,
   clearcoat: 0.1,
   clearcoatRoughness: 0.8,
+  transparent: false,
+  depthTest: true,
+  depthWrite: true,
 });
 
 export function Cubie({ data }: { data: CubieData }) {
@@ -97,27 +100,34 @@ export function Cubie({ data }: { data: CubieData }) {
       >
         <primitive object={blackMaterial} attach="material" />
       </RoundedBox>
-      {faces.map((f, i) => (
-        <group
-          key={i}
-          position={f.position as any}
-          rotation={f.rotation as any}
-        >
-          <mesh castShadow receiveShadow>
-            <planeGeometry args={[FACE_SIZE, FACE_SIZE]} />
-            <meshPhysicalMaterial
-              color={f.color ?? "#0a0a0a"}
-              metalness={0.0}
-              roughness={0.4}
-              clearcoat={0.3}
-              clearcoatRoughness={0.3}
-              reflectivity={0.05}
-              side={THREE.FrontSide}
-              transparent={false}
-            />
-          </mesh>
-        </group>
-      ))}
+      {faces.map((f, i) => {
+        // Only render sticker if it has a color
+        if (!f.color) return null;
+        
+        return (
+          <group
+            key={i}
+            position={f.position as any}
+            rotation={f.rotation as any}
+          >
+            <mesh castShadow receiveShadow>
+              <planeGeometry args={[FACE_SIZE, FACE_SIZE]} />
+              <meshPhysicalMaterial
+                color={f.color}
+                metalness={0.0}
+                roughness={0.4}
+                clearcoat={0.2}
+                clearcoatRoughness={0.4}
+                reflectivity={0.02}
+                side={THREE.FrontSide}
+                transparent={false}
+                depthTest={true}
+                depthWrite={true}
+              />
+            </mesh>
+          </group>
+        );
+      })}
     </a.group>
   );
 }

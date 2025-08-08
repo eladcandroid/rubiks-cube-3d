@@ -1,4 +1,3 @@
-import React from "react";
 import { useCubeStore } from "../state/cubeStore";
 
 export function DebugInfo() {
