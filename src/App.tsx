@@ -1,12 +1,17 @@
 import "./App.css";
-import React from "react";
 import { RubiksCubeScene } from "./components/RubiksCube";
 import { ControlsPanel } from "./components/UI/ControlsPanel";
 import { KeyboardHandler } from "./components/KeyboardHandler";
-import { DebugInfo } from "./components/DebugInfo";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 
-export default function App() {
-  const [showDebug, setShowDebug] = React.useState(true);
+function AppContent() {
+  const { language, setLanguage, t } = useLanguage();
+  
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'he' : 'en');
+  };
+
+  const isRTL = language === 'he';
   
   return (
     <div
@@ -17,9 +22,9 @@ export default function App() {
         height: "100dvh",
         padding: 12,
         boxSizing: "border-box",
+        direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
-      {showDebug && <DebugInfo />}
       <div
         style={{
           borderRadius: 12,
@@ -31,20 +36,42 @@ export default function App() {
         <RubiksCubeScene />
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <h2 style={{ margin: 0 }}>קוביה הונגרית</h2>
-        <button 
-          onClick={() => setShowDebug(!showDebug)}
-          style={{ padding: "5px", fontSize: "12px" }}
-        >
-          {showDebug ? "Hide" : "Show"} Debug Info
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h2 style={{ margin: 0 }}>{t('app.title')}</h2>
+          <button 
+            onClick={toggleLanguage}
+            style={{ 
+              padding: "5px 10px", 
+              fontSize: "12px",
+              background: "#333",
+              color: "white",
+              border: "1px solid #555",
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+          >
+            {t('language.switch')}
+          </button>
+        </div>
         <ControlsPanel />
         <KeyboardHandler />
-        <div style={{ marginTop: "auto", fontSize: 12, opacity: 0.8 }}>
-          בנוי עם React, Three.js, zustand ו-@react-three/fiber. סיבובים חלקים,
-          אנימציות מלאות, מקלדת וכפתורים.
+        <div style={{ 
+          marginTop: "auto", 
+          fontSize: 12, 
+          opacity: 0.8,
+          textAlign: isRTL ? 'right' : 'left'
+        }}>
+          {t('footer.builtWith')}
         </div>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
