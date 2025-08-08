@@ -18,11 +18,13 @@ function AppContent() {
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 320px",
+        gridTemplateRows: "1fr",
         gap: 16,
-        height: "100dvh",
+        height: "100vh",
         padding: 12,
         boxSizing: "border-box",
         direction: isRTL ? 'rtl' : 'ltr',
+        overflow: "hidden"
       }}
     >
       <div
@@ -35,7 +37,7 @@ function AppContent() {
       >
         <RubiksCubeScene />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, overflow: "hidden", maxHeight: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <h2 style={{ margin: 0 }}>{t('app.title')}</h2>
           <button 
@@ -55,14 +57,6 @@ function AppContent() {
         </div>
         <ControlsPanel />
         <KeyboardHandler />
-        <div style={{ 
-          marginTop: "auto", 
-          fontSize: 12, 
-          opacity: 0.8,
-          textAlign: isRTL ? 'right' : 'left'
-        }}>
-          {t('footer.builtWith')}
-        </div>
       </div>
     </div>
   );

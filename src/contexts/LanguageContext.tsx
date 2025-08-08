@@ -16,7 +16,6 @@ const translations = {
     
     // Controls
     'controls.newScramble': 'New Scramble',
-    'controls.runScramble': 'Run Scramble',
     'controls.autoSolve': '🧠 Auto Solve',
     'controls.reset': 'Reset',
     'controls.run': 'Run',
@@ -67,6 +66,7 @@ const translations = {
     'solve.step7.desc': 'Placing the last edge pieces correctly',
     'solve.completed': '🎉 Cube solved successfully!',
     'solve.moves': 'Moves:',
+    'solve.clickToNavigate': 'Click any step to navigate',
   },
   he: {
     // App title
@@ -74,7 +74,6 @@ const translations = {
     
     // Controls
     'controls.newScramble': 'ערבול חדש',
-    'controls.runScramble': 'הפעל ערבול',
     'controls.autoSolve': '🧠 פתרון אוטומטי',
     'controls.reset': 'איפוס',
     'controls.run': 'הפעל',
@@ -125,6 +124,7 @@ const translations = {
     'solve.step7.desc': 'הצבת חלקי הקצה האחרונים במקום הנכון',
     'solve.completed': '🎉 הקוביה נפתרה בהצלחה!',
     'solve.moves': 'מהלכים:',
+    'solve.clickToNavigate': 'לחץ על כל שלב לניווט',
   },
 };
 

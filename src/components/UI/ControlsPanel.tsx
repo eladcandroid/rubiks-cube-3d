@@ -37,9 +37,10 @@ export function ControlsPanel() {
   const clearSolvingSteps = useCubeStore((s) => s.clearSolvingSteps);
   const setIsSolving = useCubeStore((s) => s.setIsSolving);
   const setCurrentSolvingStep = useCubeStore((s) => s.setCurrentSolvingStep);
+  const setBaseCubeState = useCubeStore((s) => s.setBaseCubeState);
   const isSolving = useCubeStore((s) => s.isSolving);
+  const cubies = useCubeStore((s) => s.cubies);
   const [seq, setSeq] = useState("");
-  const [scramble, setScramble] = useState(() => randomScramble());
 
   const runSeq = useCallback(
     (text: string) => {
@@ -52,10 +53,16 @@ export function ControlsPanel() {
   const onScramble = useCallback(() => {
     const s = randomScramble();
     console.log('🎲 SCRAMBLE: Generated new scramble:', s);
-    setScramble(s);
     setLastScramble(s); // Store for solving
+    
+    // Store the current cube state before scrambling
+    setTimeout(() => {
+      setBaseCubeState(JSON.parse(JSON.stringify(cubies)));
+      console.log('📦 SCRAMBLE: Stored base cube state for step navigation');
+    }, s.split(' ').length * 600 + 100); // Wait for scramble to complete
+    
     runSeq(s);
-  }, [runSeq]);
+  }, [runSeq, cubies, setBaseCubeState]);
 
   const onAutoSolve = useCallback(async () => {
     if (isSolving) return;
@@ -111,7 +118,7 @@ export function ControlsPanel() {
   const disabled = useCubeStore((s) => !!s.activeRotation) || isSolving;
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
+    <div style={{ display: "grid", gap: 8, overflow: "auto", flex: 1, minHeight: 0 }}>
       <div
         style={{
           display: "grid",
@@ -136,13 +143,6 @@ export function ControlsPanel() {
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <button onClick={() => {
-          console.log('🎲 SCRAMBLE: Running existing scramble:', scramble);
-          setLastScramble(scramble); // Store for solving
-          runSeq(scramble);
-        }} disabled={disabled}>
-          {t("controls.runScramble")}
-        </button>
         <button onClick={onScramble} disabled={disabled}>
           {t("controls.newScramble")}
         </button>

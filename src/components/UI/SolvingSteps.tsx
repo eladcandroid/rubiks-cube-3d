@@ -29,6 +29,8 @@ export function SolvingSteps() {
   const solvingSteps = useCubeStore((s) => s.solvingSteps);
   const currentStep = useCubeStore((s) => s.currentSolvingStep);
   const isSolving = useCubeStore((s) => s.isSolving);
+  const isStepNavigation = useCubeStore((s) => s.isStepNavigation);
+  const navigateToStep = useCubeStore((s) => s.navigateToStep);
   
   if (!isSolving && solvingSteps.length === 0) {
     return null;
@@ -47,7 +49,7 @@ export function SolvingSteps() {
       color: '#fff'
     }}>
       <h3 style={{ 
-        margin: '0 0 12px 0', 
+        margin: '0 0 8px 0', 
         fontSize: '16px',
         textAlign: isRTL ? 'right' : 'left'
       }}>
@@ -57,6 +59,16 @@ export function SolvingSteps() {
           (isRTL ? 'הקוביה נפתרה!' : 'Cube solved!')
         }
       </h3>
+      {!isSolving && solvingSteps.length > 0 && (
+        <p style={{
+          margin: '0 0 12px 0',
+          fontSize: '12px',
+          color: '#bbb',
+          textAlign: isRTL ? 'right' : 'left'
+        }}>
+          👆 {t('solve.clickToNavigate')}
+        </p>
+      )}
       
       <div style={{ 
         maxHeight: '200px', 
@@ -66,6 +78,7 @@ export function SolvingSteps() {
         {solvingSteps.map((step, index) => (
           <div
             key={index}
+            onClick={() => !isSolving && navigateToStep(index)}
             style={{
               marginBottom: 8,
               padding: 8,
@@ -76,6 +89,7 @@ export function SolvingSteps() {
                       index < currentStep ? '1px solid #66bb6a' : '1px solid #555',
               opacity: index > currentStep ? 0.6 : 1,
               transition: 'all 0.3s ease',
+              cursor: !isSolving ? 'pointer' : 'default',
             }}
           >
             <div style={{ 
@@ -83,8 +97,9 @@ export function SolvingSteps() {
               marginBottom: 4,
               textAlign: isRTL ? 'right' : 'left'
             }}>
-              {index === currentStep && '▶️ '}
+              {index === currentStep && (isStepNavigation ? '👆 ' : '▶️ ')}
               {index < currentStep && '✅ '}
+              {index > currentStep && '⭕ '}
               {t(step.stepKey)}
             </div>
             <div style={{ 

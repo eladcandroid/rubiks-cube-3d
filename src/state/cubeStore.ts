@@ -42,6 +42,8 @@ export interface CubeState {
   solvingSteps: SolvingStep[];
   isSolving: boolean;
   currentSolvingStep: number;
+  isStepNavigation: boolean;
+  baseCubeState: CubieData[] | null; // Store scrambled state for step navigation
   setActiveRotation: (rot: ActiveRotation | null) => void;
   enqueueMoves: (moves: MoveCommand[]) => void;
   startNextMove: () => void;
@@ -50,6 +52,9 @@ export interface CubeState {
   clearSolvingSteps: () => void;
   setIsSolving: (solving: boolean) => void;
   setCurrentSolvingStep: (step: number) => void;
+  setIsStepNavigation: (nav: boolean) => void;
+  setBaseCubeState: (state: CubieData[] | null) => void;
+  navigateToStep: (stepIndex: number) => void;
   reset: () => void;
 }
 
@@ -158,6 +163,8 @@ export const useCubeStore = create<CubeState>((set, get) => ({
   solvingSteps: [],
   isSolving: false,
   currentSolvingStep: -1,
+  isStepNavigation: false,
+  baseCubeState: null,
   setActiveRotation: (rot) => set({ activeRotation: rot }),
   enqueueMoves: (moves) =>
     set((s) => ({ moveQueue: [...s.moveQueue, ...moves] })),
@@ -212,6 +219,19 @@ export const useCubeStore = create<CubeState>((set, get) => ({
   clearSolvingSteps: () => set({ solvingSteps: [], currentSolvingStep: -1 }),
   setIsSolving: (solving) => set({ isSolving: solving }),
   setCurrentSolvingStep: (step) => set({ currentSolvingStep: step }),
+  setIsStepNavigation: (nav) => set({ isStepNavigation: nav }),
+  setBaseCubeState: (state) => set({ baseCubeState: state }),
+  navigateToStep: (stepIndex) => {
+    const { solvingSteps, baseCubeState } = get();
+    if (!baseCubeState || !solvingSteps.length) return;
+
+    console.log(`🧭 NAVIGATION: Navigating to step ${stepIndex + 1}`);
+    
+    set({ 
+      currentSolvingStep: stepIndex,
+      isStepNavigation: true
+    });
+  },
   reset: () =>
     set({
       cubies: makeSolvedCubies(),
@@ -220,6 +240,8 @@ export const useCubeStore = create<CubeState>((set, get) => ({
       solvingSteps: [],
       isSolving: false,
       currentSolvingStep: -1,
+      isStepNavigation: false,
+      baseCubeState: null,
     }),
 }));
 
